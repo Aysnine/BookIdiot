@@ -19,7 +19,7 @@ import {
 } from '@react-navigation/native-stack';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 
-const PRIMARY_COLOR = '#f4511e';
+const PRIMARY_COLOR = '#4dabf7';
 const TITLE_COLOR = '#fff';
 
 const styles = StyleSheet.create({
@@ -103,6 +103,7 @@ function App() {
       <Stack.Navigator
         initialRouteName="Home"
         screenOptions={{
+          animation: 'slide_from_right',
           headerStyle: {
             backgroundColor: PRIMARY_COLOR,
           },
