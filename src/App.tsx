@@ -10,8 +10,8 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {MainScreen} from './screens/MainScreen';
-import {DebugScreen} from './screens/DebugScreen';
-import {DetailsScreen} from './screens/DetailsScreen';
+import {BooksScreen} from './screens/BooksScreen';
+import {ReaderScreen} from './screens/ReaderScreen';
 
 const PRIMARY_COLOR = '#4dabf7';
 const TITLE_COLOR = '#fff';
@@ -76,14 +76,14 @@ function App() {
                 name="Main"
                 component={MainScreen}
                 options={{
-                  title: 'Books',
+                  title: 'Home',
                 }}
               />
               <Tab.Screen
-                name="Debug"
-                component={DebugScreen}
+                name="Books"
+                component={BooksScreen}
                 options={{
-                  title: 'Debug',
+                  title: 'Books',
                 }}
               />
             </Tab.Navigator>
@@ -91,8 +91,8 @@ function App() {
         </Stack.Screen>
         <Stack.Screen
           name="Details"
-          component={DetailsScreen}
-          options={{title: 'Overview'}}
+          component={ReaderScreen}
+          options={{title: 'Reader'}}
         />
       </Stack.Navigator>
     </NavigationContainer>

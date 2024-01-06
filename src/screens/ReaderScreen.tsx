@@ -4,7 +4,7 @@ import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootParamList} from '../App';
 
-const detailsScreenStyles = StyleSheet.create({
+const readerScreenStyles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
@@ -12,14 +12,14 @@ const detailsScreenStyles = StyleSheet.create({
   },
 });
 
-export function DetailsScreen() {
+export function ReaderScreen() {
   const route = useRoute<RouteProp<RootParamList, 'Details'>>();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootParamList, 'Details'>>();
   const detailId = route.params.detailId;
 
   return (
-    <View style={detailsScreenStyles.container}>
+    <View style={readerScreenStyles.container}>
       <Text>Details Screen</Text>
       <Text>Detail ID: {detailId}</Text>
 

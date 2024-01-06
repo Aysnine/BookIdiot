@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 
-const debugScreenStyles = StyleSheet.create({
+const booksScreenStyles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
@@ -9,9 +9,9 @@ const debugScreenStyles = StyleSheet.create({
   },
 });
 
-export function DebugScreen() {
+export function BooksScreen() {
   return (
-    <View style={debugScreenStyles.container}>
+    <View style={booksScreenStyles.container}>
       <Text>hello</Text>
     </View>
   );
