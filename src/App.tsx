@@ -6,93 +6,44 @@
  */
 
 import React from 'react';
-import {StyleSheet, View, Text, Button} from 'react-native';
-import {
-  NavigationContainer,
-  RouteProp,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
-import {
-  createNativeStackNavigator,
-  NativeStackNavigationProp,
-} from '@react-navigation/native-stack';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+import {MainScreen} from './screens/MainScreen';
+import {DebugScreen} from './screens/DebugScreen';
+import {DetailsScreen} from './screens/DetailsScreen';
 
 const PRIMARY_COLOR = '#4dabf7';
 const TITLE_COLOR = '#fff';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
-
-type RootParamList = {
+export type RootParamList = {
   Home: undefined;
   Details: {
     detailId: string;
   };
 };
 
-function MainScreen() {
-  const navigation =
-    useNavigation<NativeStackNavigationProp<RootParamList, 'Home'>>();
-
-  return (
-    <View style={styles.container}>
-      <Text>Home Screen</Text>
-      <Button
-        title="Go to Details 123"
-        onPress={() => {
-          navigation.push('Details', {
-            detailId: '123',
-          });
-        }}
-      />
-      <Button
-        title="Go to Details 456"
-        onPress={() => {
-          navigation.push('Details', {
-            detailId: '456',
-          });
-        }}
-      />
-    </View>
-  );
-}
-
-function MessageScreen() {
-  return (
-    <View style={styles.container}>
-      <Text>Feed Screen</Text>
-    </View>
-  );
-}
-
-function DetailsScreen() {
-  const route = useRoute<RouteProp<RootParamList, 'Details'>>();
-  const navigation =
-    useNavigation<NativeStackNavigationProp<RootParamList, 'Details'>>();
-  const detailId = route.params.detailId;
-
-  return (
-    <View style={styles.container}>
-      <Text>Details Screen</Text>
-      <Text>Detail ID: {detailId}</Text>
-
-      <Button title="Go to Home" onPress={() => navigation.navigate('Home')} />
-      <Button title="Go back" onPress={() => navigation.goBack()} />
-
-      <Button
-        title="Go back to first screen in stack"
-        onPress={() => navigation.popToTop()}
-      />
-    </View>
-  );
-}
+export const DATA = [
+  // {
+  //   title: 'Internal file test',
+  //   data: ['internal'],
+  // },
+  // {
+  //   title: 'Online file test',
+  //   data: [
+  //     'http://xxx',
+  //     'http://xxx',
+  //     'http://xxx',
+  //     'http://xxx',
+  //     'http://xxx',
+  //     'http://xxx',
+  //   ],
+  // },
+  {
+    title: 'Local file test',
+    data: ['Water', 'Coke', 'Beer'],
+  },
+];
 
 const Stack = createNativeStackNavigator();
 const Tab = createMaterialTopTabNavigator();
@@ -103,6 +54,7 @@ function App() {
       <Stack.Navigator
         initialRouteName="Home"
         screenOptions={{
+          title: 'BookIdiot',
           animation: 'slide_from_right',
           headerStyle: {
             backgroundColor: PRIMARY_COLOR,
@@ -120,8 +72,20 @@ function App() {
                   backgroundColor: PRIMARY_COLOR,
                 },
               }}>
-              <Tab.Screen name="Main" component={MainScreen} />
-              <Tab.Screen name="Message" component={MessageScreen} />
+              <Tab.Screen
+                name="Main"
+                component={MainScreen}
+                options={{
+                  title: 'Books',
+                }}
+              />
+              <Tab.Screen
+                name="Debug"
+                component={DebugScreen}
+                options={{
+                  title: 'Debug',
+                }}
+              />
             </Tab.Navigator>
           )}
         </Stack.Screen>
