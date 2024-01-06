@@ -23,28 +23,6 @@ export type RootParamList = {
   };
 };
 
-export const DATA = [
-  // {
-  //   title: 'Internal file test',
-  //   data: ['internal'],
-  // },
-  // {
-  //   title: 'Online file test',
-  //   data: [
-  //     'http://xxx',
-  //     'http://xxx',
-  //     'http://xxx',
-  //     'http://xxx',
-  //     'http://xxx',
-  //     'http://xxx',
-  //   ],
-  // },
-  {
-    title: 'Local file test',
-    data: ['Water', 'Coke', 'Beer'],
-  },
-];
-
 const Stack = createNativeStackNavigator();
 const Tab = createMaterialTopTabNavigator();
 
