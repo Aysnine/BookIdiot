@@ -8,7 +8,8 @@
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
-    "ios-pod-install": "npx pod-install ios"
+    "ios-pod-install": "npx pod-install ios",
+    "doctor": "react-native doctor"
   },
   "dependencies": {
     "@react-navigation/bottom-tabs": "^6.5.11",
