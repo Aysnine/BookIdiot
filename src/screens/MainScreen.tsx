@@ -5,7 +5,6 @@ import DocumentPicker, {
   DocumentPickerResponse,
   isCancel,
   isInProgress,
-  types,
 } from 'react-native-document-picker';
 
 const mainScreenStyles = StyleSheet.create({
@@ -23,9 +22,6 @@ const mainScreenStyles = StyleSheet.create({
 });
 
 export function MainScreen() {
-  // const navigation =
-  //   useNavigation<NativeStackNavigationProp<RootParamList, 'Home'>>();
-
   const [result, setResult] = useState<
     Array<DocumentPickerResponse> | DirectoryPickerResponse | undefined | null
   >();
@@ -36,7 +32,7 @@ export function MainScreen() {
 
   const handleError = (err: unknown) => {
     if (isCancel(err)) {
-      console.warn('cancelled');
+      // console.warn('cancelled');
       // User cancelled the picker, exit any dialogs or menus and move on
     } else if (isInProgress(err)) {
       console.warn(
@@ -46,11 +42,12 @@ export function MainScreen() {
       throw err;
     }
   };
+
   return (
     <SafeAreaView style={mainScreenStyles.container}>
       <View style={mainScreenStyles.container}>
         <Button
-          title="open picker for single file selection"
+          title="Open Epub File"
           onPress={async () => {
             try {
               const pickerResult = await DocumentPicker.pickSingle({
@@ -63,7 +60,7 @@ export function MainScreen() {
             }
           }}
         />
-        <Button
+        {/* <Button
           title="open picker for multi file selection"
           onPress={() => {
             DocumentPicker.pick({allowMultiSelection: true})
@@ -107,7 +104,7 @@ export function MainScreen() {
           onPress={() => {
             DocumentPicker.pickDirectory().then(setResult).catch(handleError);
           }}
-        />
+        /> */}
 
         <Text selectable>Result: {JSON.stringify(result, null, 2)}</Text>
       </View>
