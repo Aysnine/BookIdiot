@@ -130,7 +130,7 @@ export function MainScreen() {
         />
 
         <Text selectable>
-          Debug Current Open: {JSON.stringify(result, null, 2)}
+          Debug Last Open: {JSON.stringify(result, null, 2)}
         </Text>
       </View>
     </SafeAreaView>
