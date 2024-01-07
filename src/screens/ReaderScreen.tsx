@@ -16,6 +16,7 @@ const readerScreenStyles = StyleSheet.create({
 export function ReaderScreen() {
   const route = useRoute<RouteProp<RootParamList, 'Details'>>();
   const bookName = route.params.documentExploreMeta.pickerResult.name;
+  const bookUri = route.params.documentExploreMeta.pickerResult.uri;
   const navigation =
     useNavigation<NativeStackNavigationProp<RootParamList, 'Details'>>();
 
@@ -32,10 +33,47 @@ export function ReaderScreen() {
   return (
     <View style={readerScreenStyles.container}>
       <WebView
+        webviewDebuggingEnabled
+        javaScriptEnabled
+        domStorageEnabled
         ref={webview}
         style={[readerScreenStyles.wholeScreen]}
         originWhitelist={['*']}
-        source={{html: '<h1>This is a static HTML source!</h1>'}}
+        source={{
+          html: `
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/epubjs/dist/epub.min.js"></script>
+		<style>
+			body { margin: 0; }
+			#reader {
+				height: 100vh;
+				width: 100vw;
+				overflow: hidden !important;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="reader"></div>
+	</body>
+	<script>
+		window.book = ePub('${bookUri}');
+		window.rendition = window.book.renderTo(document.getElementById('reader'), {
+			width: '100%',
+			height: '100%'
+		});
+    console.log('book');
+	</script>
+</html>
+        `,
+        }}
       />
     </View>
   );
