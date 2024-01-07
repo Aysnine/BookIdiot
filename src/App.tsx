@@ -12,6 +12,7 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import {MainScreen} from './screens/MainScreen';
 import {BooksScreen} from './screens/BooksScreen';
 import {ReaderScreen} from './screens/ReaderScreen';
+import {DocumentExploreMeta} from './types';
 
 const PRIMARY_COLOR = '#4dabf7';
 const TITLE_COLOR = '#fff';
@@ -19,7 +20,7 @@ const TITLE_COLOR = '#fff';
 export type RootParamList = {
   Home: undefined;
   Details: {
-    detailId: string;
+    documentExploreMeta: DocumentExploreMeta;
   };
 };
 

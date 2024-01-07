@@ -16,7 +16,7 @@ export function ReaderScreen() {
   const route = useRoute<RouteProp<RootParamList, 'Details'>>();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootParamList, 'Details'>>();
-  const detailId = route.params.detailId;
+  const detailId = route.params.documentExploreMeta.md5;
 
   return (
     <View style={readerScreenStyles.container}>

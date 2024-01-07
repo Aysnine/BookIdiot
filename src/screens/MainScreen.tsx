@@ -1,11 +1,22 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, SafeAreaView, StyleSheet, Button} from 'react-native';
+import {
+  View,
+  Text,
+  SafeAreaView,
+  StyleSheet,
+  Button,
+  Alert,
+} from 'react-native';
 import DocumentPicker, {
-  DirectoryPickerResponse,
-  DocumentPickerResponse,
   isCancel,
   isInProgress,
 } from 'react-native-document-picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {stringMd5} from 'react-native-quick-md5';
+import {DocumentExploreMeta} from '../types';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootParamList} from '../App';
+import {useNavigation} from '@react-navigation/native';
 
 const mainScreenStyles = StyleSheet.create({
   container: {
@@ -22,13 +33,10 @@ const mainScreenStyles = StyleSheet.create({
 });
 
 export function MainScreen() {
-  const [result, setResult] = useState<
-    Array<DocumentPickerResponse> | DirectoryPickerResponse | undefined | null
-  >();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootParamList, 'Home'>>();
 
-  useEffect(() => {
-    console.log(JSON.stringify(result, null, 2));
-  }, [result]);
+  const [result, setResult] = useState<Array<DocumentExploreMeta>>([]);
 
   const handleError = (err: unknown) => {
     if (isCancel(err)) {
@@ -43,6 +51,21 @@ export function MainScreen() {
     }
   };
 
+  const [recentBooks, setRecentBooks] = useState<Array<DocumentExploreMeta>>(
+    [],
+  );
+
+  useEffect(() => {
+    const loadRecentBooks = async () => {
+      const recentBooksJson = await AsyncStorage.getItem('recent-books');
+      if (recentBooksJson) {
+        const data = JSON.parse(recentBooksJson);
+        setRecentBooks(data);
+      }
+    };
+    loadRecentBooks();
+  }, []);
+
   return (
     <SafeAreaView style={mainScreenStyles.container}>
       <View style={mainScreenStyles.container}>
@@ -54,59 +77,61 @@ export function MainScreen() {
                 presentationStyle: 'fullScreen',
                 copyTo: 'cachesDirectory',
               });
-              setResult([pickerResult]);
+
+              if (pickerResult.type !== 'application/epub+zip') {
+                Alert.alert('Not a epub file');
+                return;
+              }
+
+              const md5 = stringMd5(pickerResult.uri);
+
+              const currentOpened: DocumentExploreMeta = {
+                pickerResult,
+                updatedAt: new Date().toISOString(),
+                md5,
+              };
+              setResult([currentOpened]);
+
+              const existingBook = recentBooks.find(book => book.md5 === md5);
+
+              const books = (
+                existingBook
+                  ? [
+                      currentOpened,
+                      ...recentBooks.filter(book => book.md5 !== md5),
+                    ]
+                  : [currentOpened, ...recentBooks]
+              )
+                .sort(
+                  (a, b) =>
+                    new Date(b.updatedAt).getTime() -
+                    new Date(a.updatedAt).getTime(),
+                )
+                .slice(0, 10);
+
+              setRecentBooks(books);
+
+              try {
+                await AsyncStorage.setItem(
+                  'recent-books',
+                  JSON.stringify(books, null, 2),
+                );
+              } catch (e) {
+                console.log('save to recent error', e);
+              }
+
+              navigation.navigate('Details', {
+                documentExploreMeta: currentOpened,
+              });
             } catch (e) {
               handleError(e);
             }
           }}
         />
-        {/* <Button
-          title="open picker for multi file selection"
-          onPress={() => {
-            DocumentPicker.pick({allowMultiSelection: true})
-              .then(setResult)
-              .catch(handleError);
-          }}
-        />
-        <Button
-          title="open picker for multi selection of word files"
-          onPress={() => {
-            DocumentPicker.pick({
-              allowMultiSelection: true,
-              type: [types.doc, types.docx],
-            })
-              .then(setResult)
-              .catch(handleError);
-          }}
-        />
-        <Button
-          title="open picker for single selection of pdf file"
-          onPress={() => {
-            DocumentPicker.pick({
-              type: types.pdf,
-            })
-              .then(setResult)
-              .catch(handleError);
-          }}
-        />
-        <Button
-          title="releaseSecureAccess"
-          onPress={() => {
-            DocumentPicker.releaseSecureAccess([])
-              .then(() => {
-                console.warn('releaseSecureAccess: success');
-              })
-              .catch(handleError);
-          }}
-        />
-        <Button
-          title="open directory picker"
-          onPress={() => {
-            DocumentPicker.pickDirectory().then(setResult).catch(handleError);
-          }}
-        /> */}
 
-        <Text selectable>Result: {JSON.stringify(result, null, 2)}</Text>
+        <Text selectable>
+          Debug Current Open: {JSON.stringify(result, null, 2)}
+        </Text>
       </View>
     </SafeAreaView>
   );
